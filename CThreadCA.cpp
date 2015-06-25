@@ -7,10 +7,11 @@
 FILE *file = fopen("result.txt","w"); 
 FILE *res = fopen("disp500.txt","a");
 FILE *blocks = fopen("blocks.txt","a");
+double eps=1e-4;
 int ckw=1; //переменная для указания типа обхода в блоке: 1 - ckw, 0 - anticlockwise
 
 unsigned long int nStep;
-int defectOn=4; //0 - без дефекта, 1 - есть случайный дефект
+int defectOn=10; //0 - без дефекта, 1 - есть случайный дефект
 //генерируем координаты
 void CThreadCA::genSquare(float x, float y,Coordinates_t *ptr){
   Coordinate_t cord;
@@ -85,18 +86,26 @@ void CThreadCA::init(){
   //очищаем  ј1, и  ј2 которые потом будут обмениватьс€
   listCA1.clear();
   listCA2.clear();
-/*  int def_num = rand()%(w*l*h);
-   while(def_num%w>6&&def_num%w<l-6&&def_num%l>6&&def_num%l<w-6) {
+  int def_num = rand()%(w*l*h);
+  int def_pos[]={2233,2205,2356,70,103,2452,1098,1402,495,1596};
+ /* for(int i=0;i<defectOn;i++) {
+	def_pos[i]=rand()%(w*l*h);
+while (def_pos[i]>=(w-10)*(l/2) && def_pos[i]<=(w+10)*l/2 && def_pos[i]%w>=(l/2-10/2) && def_pos[i]%w<(l/2+10/2)) {
+	  def_pos[i]=rand()%(w*l*h);
+  }
+  }
+  */
+  
+  while (def_num>=(w-10)*(l/2) && def_num<=(w+10)*l/2 && def_num%w>=(l/2-10/2) && def_num%w<(l/2+10/2)) {
 	  def_num=rand()%(w*l*h);
   }
- */
-int def_num=223; 
+  
   for(unsigned long int i=0; i<numCA; ++i){
     //создаем два автомата и инициализируем их
     listCA1.push_back(new myCa(id,l,w,h));
-    listCA1.at(id)->init(id,def_num);
+    listCA1.at(id)->init(id,def_pos,defectOn);
     listCA2.push_back(new myCa(id,l,w,h));
-    listCA2.at(id)->init(id, def_num);
+    listCA2.at(id)->init(id, def_pos,defectOn);
       ++id;
   }
   //обозначаем выходной автомат
@@ -140,8 +149,11 @@ CListInt CThreadCA::getId(signed long int x, signed long int y){
    }
   else{
     addId(&listId,x,y); 
-	addId(&listId,x+1,y);
-	addId(&listId,x-1,y-1);
+	
+    addId(&listId,x+1,y);
+	
+    addId(&listId,x-1,y-1);
+	
 	addId(&listId,x-1,y+1);
 		
 	}
@@ -165,7 +177,7 @@ CListInt CThreadCA::getId(signed long int x, signed long int y){
   return listId; //return list of neighbors coordinates
 }
 
-void CThreadCA::run(){
+bool CThreadCA::run(){
 
   ++nStep;
   CListVariety listVariety;
@@ -196,7 +208,7 @@ if(nStep%2==0) { //even step четный шаг
 	  centergo=0; //без смещени€ центра 
   } 
   */
-  centergo=rand()%6; //смещение центра по направлениям (0,1,2,3,4,5,6)
+  centergo=rand()%6+1; //смещение центра в (1,2,3,4,5,6)
  /*****************************************************************************************************************************************
 »значально кажда€ из €чеек цикла (+2 по иксу, +2 по игреку на каждом шаге) - центр у-блока. 
 ¬ зависимости от значениЯ centergo, мы смещаем центр каждого блока в одну из периферийных Ячеек изначального блока.
@@ -310,7 +322,7 @@ if(centergo==0) {
 		double dispertion = 0.0;
 		
 		if(defectOn==0) {
-		double state_on_ca=(double)600/(w*l*h); //6*10*10 
+		double state_on_ca=(double)600/(w*l*h); //6*10*10 / 2500
 					
 		for(unsigned int i=0;i<ptrCurListCA->size();++i){ //go around all current CAs 
 			
@@ -322,8 +334,8 @@ if(centergo==0) {
 		}
 		
 		dispertion=pow(dispertion/(l*w*h),0.5);	//dispertion is square root of disp/(w*h*l)
-		//fprintf(file,"%e\n",dispertion);	//на каждом шаге записываем дисперсию		
-		//fflush(file);			
+		fprintf(file,"%e\n",dispertion);	//на каждом шаге записываем дисперсию		
+		fflush(file);			
 		} else if(defectOn!=0) {
 			double state_on_ca=(double)600/(l*w*h-defectOn); //6*10*10-1  l*w*h minus 1 defect 
 					
@@ -337,41 +349,26 @@ if(centergo==0) {
 		}
 		
 		dispertion=pow(dispertion/(l*w*h-defectOn),0.5);	//dispertion is square root of disp/2500
-	//	fprintf(file,"%e\n",dispertion);	//на каждом шаге записываем дисперсию		
-	//	fflush(file);		
+		fprintf(file,"%e\n",dispertion);	//на каждом шаге записываем дисперсию		
+		fflush(file);		
 		}
 		
 		
-		if(dispertion<1e-4) {
-			fprintf(file,"%d\n",nStep);	//пишем шаги с дисперсией меньше 10-4	
-		fflush(file);
-		}
-		/*
-		if(dispertion<1e-4)
-		{					
+		
+	//	if((dispertion<1.05*eps)&&(dispertion>0.95*eps))
+		if(dispertion<eps)
+		{			
 			fprintf(res,"%d\n",nStep);			
 			fflush(res);
-			
-		} 
-		*/
+			return false;
 		
-		
-double eps=0.001;
-double l[]={1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0};
-int s=0;
-		for(int i=0;i<sizeof(l);i++) {
-			if(fabs(-log10(dispertion)-l[i]) <eps && s==0) {
-				s++;
-				fprintf(res, "%f %d\n",l[i],nStep);
-				fflush(res);
-				break;
-			}
-		}
-		
+		}	
 	     ++step;
 		
-		
+		complBlocks=0;
+		uncomplBlocks=0;
   //ptrOutputListCA = ptrNextListCA;
+  return true;
 }
 
 unsigned char CThreadCA::getNumModeVisualisation(){

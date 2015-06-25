@@ -30,7 +30,7 @@ class CThread
     //инициализация
     virtual void init();
     //Запуск хода моделирования
-    virtual void run();
+    virtual bool run();
     //возращает список клеток которые будут визуализироваться
     CListCA *getOutputListCA();
     Figure_t *getListFigure();

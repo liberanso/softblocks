@@ -164,7 +164,7 @@ void CThreadImplHard::init(){
   genGrid();
 }
 
-void CThreadImplHard::run(){
+bool CThreadImplHard::run(){
  for(unsigned char i=0;i<MAX_PARTICULAR;++i){
    nl[i] = rand()%(WIDTH/3)+WIDTH/3;
  }
@@ -188,6 +188,7 @@ void CThreadImplHard::run(){
   }
   listHardImpl = ptrNextListCA;
   ++step;
+  return true;
 }
 
 unsigned char CThreadImplHard::getNumModeVisualisation(){

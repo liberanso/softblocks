@@ -1,7 +1,7 @@
 #include <CA.h>
 
 //метод инициализации клетки
-void CA::init(uint,uint) {};
+void CA::init(uint,int*, int) {};
 //локальные правила клетки
 CA *CA::localRule(CA *ptrCA,CListInt  *listNumCA, const CListCA *listCA, unsigned long int step) {};
 //геометрия список соседий

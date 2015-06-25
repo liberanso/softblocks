@@ -13,7 +13,7 @@ class myCa:public CA{
     void geometry(CListInt *ptr);
 
 //    void *getParam(uchar *str, uint size){return 0;}
-    void init(uint param, uint def_num);
+    void init(uint param, int *mas, int length);
     CColor getColor();
 };
 

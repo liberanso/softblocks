@@ -17,7 +17,7 @@ public:
     //тип автомата
     uint type;
     //метод инициализации клетки
-    virtual void init(uint,uint);
+    virtual void init(uint,int*,int);
     //локальные правила клетки
     virtual CA *localRule(CA *ptrCA,CListInt  *listNumCA, const CListCA *listCA, unsigned long int step);
     //геометрия список соседий

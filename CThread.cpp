@@ -7,7 +7,7 @@ void CThread::init(){
 void CThread::genGrid(){}
 
 //«апуск хода моделировани€
-void CThread::run(){
+bool CThread::run(){
   if((step&1) == 0){
     ptrCurListCA = &listCA1;
     ptrNextListCA = &listCA2;
@@ -25,6 +25,7 @@ void CThread::run(){
   }
   ptrOutputListCA = ptrNextListCA;
   ++step;
+  return true;
 }
 //возращает список клеток которые будут визуализироватьс€
 CListCA *CThread::getOutputListCA(){

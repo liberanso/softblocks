@@ -18,7 +18,7 @@ public:
   uint h;
   void init();
 
-  virtual void run();
+  virtual bool run();
   unsigned char getNumModeVisualisation();
 };
 #endif

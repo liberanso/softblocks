@@ -3,7 +3,7 @@
 
 //просто пример класса
 
-int defOn=4; //0 - без дефекта, 1 - есть случайный дефект  
+int defOn=10; //0 - без дефекта, 1 - есть случайный дефект  
 myCa::myCa(uint param0, uint param1, uint param2, uint param3):CA(param0,param1,param2, param3)
 {
     type = 0;
@@ -170,7 +170,7 @@ void myCa::geometry(CListInt *ptr)
 
 
 //    void *getParam(uchar *str, uint size){return 0;}
-void myCa::init(uint param,uint def_num) //передается параметром айди клетки 
+void myCa::init(uint param,int *mas, int length) //передается параметром айди клетки 
 {
     int w_q=10;
     int l_q=10;
@@ -202,8 +202,10 @@ void myCa::init(uint param,uint def_num) //передается параметром айди клетки
 //		state=defect;
 //	}
 if(defOn!=0) {
-if(param==def_num || param==2340 || param==1254 || param == 1398) {// || param == 2407) { //добавление рандомного дефекта 
-	state=defect;
+for(int i=0;i<length;i++) {
+	if(param==mas[i]) {
+		state=defect;
+	}
 }
 }
 }

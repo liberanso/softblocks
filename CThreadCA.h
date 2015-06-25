@@ -26,6 +26,6 @@ unsigned char getNumModeVisualisation();
 
   //получить список id
   CListInt getId(signed long int x, signed long int y);
-  virtual void run();
+  virtual bool run();
 };
 #endif

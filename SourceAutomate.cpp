@@ -70,9 +70,9 @@ extern "C" __declspec(dllexport) void creareAutomate()
 extern "C" __declspec(dllexport) void StepForwardAutomate()
 {
 
-
+	bool stop=0;
     static uint step = 0;
-    if(step++ == 3000)
+    if(++step == 2000)
 	{ 
 		step=0;
       for(uint i=0; i<listThread.size(); ++i)
@@ -83,8 +83,12 @@ extern "C" __declspec(dllexport) void StepForwardAutomate()
 	
     for(uint i=0; i<listThread.size(); ++i)  
 	{
-        listThread.at(i)->run();
+        stop=listThread.at(i)->run();
+		if(stop==false) {
+		step=1999;
+	}
     }
+	
 }
 
 //функция освобождения всех автоматов, клеток, высвобождение памяти
