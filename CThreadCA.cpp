@@ -88,6 +88,7 @@ void CThreadCA::init(){
   listCA2.clear();
   int def_num = rand()%(w*l*h);
   int def_pos[]={2233,2205,2356,70,103,2452,1098,1402,495,1596};
+  //int def_pos[defectOn];
  /* for(int i=0;i<defectOn;i++) {
 	def_pos[i]=rand()%(w*l*h);
 while (def_pos[i]>=(w-10)*(l/2) && def_pos[i]<=(w+10)*l/2 && def_pos[i]%w>=(l/2-10/2) && def_pos[i]%w<(l/2+10/2)) {
